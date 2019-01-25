@@ -7,13 +7,11 @@ def switchBits(x, i, j):
 def reverse(x, l):
     i = 0
     j = l - 1
-    while i < j:
-        #print(i,j)
-        x = switchBits(x, i,j)
-        i += 1
-        j -= 1
-    return x
-    #print(bin(x))
+    r = x & 1
+    for i in range (1, l):
+        r = r << 1 | (x >> i) & 1
+    print(bin(r))
+    return r
 
 def reverse64Bit(x):
     cache = []
@@ -26,7 +24,7 @@ def reverse64Bit(x):
 
     print(cache)
 
-    ret = cache[0] << (maskLen * 3) | cache[1] << (maskLen * 2) | cache[2] << (maskLen) | cache[0]
+    ret = cache[0] << (maskLen * 3) | cache[1] << (maskLen * 2) | cache[2] << (maskLen) | cache[3]
     print(bin(ret))
     return ret
 
