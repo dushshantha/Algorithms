@@ -12,6 +12,7 @@ def reverse(x, l):
         r = r << 1 | (x >> i) & 1
     print(bin(r))
     return r
+    #
 
 def reverse64Bit(x):
     cache = []
@@ -32,7 +33,11 @@ def reverse64Bit(x):
 if __name__ == '__main__':
     print('Switching bits')
     print(bin(switchBits(1123, 1,2)))
+
+    print(reverse(8,4))
+    print(reverse(0,4))
+    print(reverse(12313,16))
     #print(bin(12 & (1 << 2)))
 
-    x = 1242342
-    #print(reverse64Bit(x))
+    x = 1242
+    print(reverse64Bit(x))
