@@ -1,35 +1,44 @@
-class Node:
-    def __init__(self, data = 0, next = None):
+class node:
+    def __init__(self, data= 0, next = None):
         self.data = data
         self.next = next
+    
+def evenOddMerger(L):
 
-def reverse(L):
-    new_List = None
     if not L:
         return None
 
-    while L:
-        temp = L
-        L = L.next
-        temp.next = new_List
-        new_List = temp
+    temp = tail = None
+    curr = L
+    while curr.next:
+        if not temp:
+            temp = tail = curr.next
+        else:
+            tail.next = curr.next
+            tail = tail.next
 
-    return new_List
+        curr.next = tail.next
+        if curr.next:
+            curr = curr.next
+        tail.next = None
+    
+    curr.next = temp
+    return L
 
-def print_list(L):
+def printL(L):
     while L:
         print(L.data)
         L = L.next
 
-if __name__ == '__main__':
-    L = Node(data = 0)
 
-    tail = L
-    for i in range(1,7):
-        tail.next = Node(data=i)
-        tail = tail.next
+if __name__ == "__main__":
+    L = node(data=0)
+    temp = L
+    for i in range(1,6):
+        temp.next = node(data=i)
+        temp = temp.next
+    
+    printL(L)
+    printL(evenOddMerger(L))  
 
-    print_list(L)
-
-    s = reverse(L)
-    print_list(s)
+    
