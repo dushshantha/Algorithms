@@ -60,6 +60,51 @@ def shortestPath(g, start, end):
         
     return ret
 
+def shortestPathDistance(g, start, end):
+    q = []
+    edge_distance = 1
+    lengths = {}
+
+    q.append(start)
+    lengths[start] = 0
+
+    while q:
+        parent = q.pop(0)
+        for item in g[parent]:
+            if item == end:
+                return lengths[parent] + edge_distance
+            if item not in lengths:
+                lengths[item] = lengths[parent] + edge_distance
+                q.append(item)
+
+    return -1
+
+def getShortestPath(g, start, end):
+    q = [start]
+    parentOf = {}
+    parentOf[start] = None
+
+    while q:
+        parent = q.pop(0)
+  
+        for child in g[parent]:
+            if child not in parentOf:
+                parentOf[child] = parent
+                q.append(child)
+                if child == end:
+                    return getPath(child, parentOf)
+            
+    return []
+
+def getPath(end, parentOf):
+    ret = [end]
+    parent = parentOf[end]
+    while parent:
+        ret.append(parent)
+        parent = parentOf[parent]
+    
+    return ret[::-1]
+
 
 def dfs(g, start, path, visited):
     if start in visited:
@@ -95,6 +140,16 @@ if __name__ == "__main__":
     print(shortestPath(g, 1, 6))
     print('Shortest Path Between 1, 4')
     print(shortestPath(g, 1, 4))
+
+    print('Shortest Path Between 1, 6')
+    print(shortestPathDistance(g, 1, 6))
+    print(getShortestPath(g,1,6))
+    print('Shortest Path Between 1, 4')
+    print(shortestPathDistance(g, 1, 4))
+    print(getShortestPath(g,1,4))
+    print('Shortest Path Between 1, 8')
+    print(shortestPathDistance(g, 1, 8))
+    print(getShortestPath(g,1,8))
 
 
 
