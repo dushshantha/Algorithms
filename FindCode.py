@@ -22,10 +22,16 @@ def findCode(positions, letters, n):
 
         for key in l[i].keys():
             if l[i][key]/n > 0.5:
-                ret += key
+                if len(ret) > 0 and ret[len(ret) - 1] == '#':
+                    print('here')
+                    return ''
+                else:
+                    ret += key
 
     return ret
 
 if __name__ == '__main__':
     print(findCode([1, 0, 0, 0, 2, 2, 2], ['+', 'A', 'C', 'B', '#', '#', '#'], 3))
     print(findCode([1, 3, 3, 3, 2, 2, 2], ['+', 'A', 'C', 'B', '#', '#', '#'], 3))
+    print(findCode([1, 2, 2, 2, 0, 0, 0], ['+', 'A', 'A', 'B', '#', '#', '#'], 3))
+    print(findCode([0, 0], ['#', '#'], 3)) # Should be '#'
