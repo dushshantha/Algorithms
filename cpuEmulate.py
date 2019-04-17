@@ -8,8 +8,8 @@ The CPU supports the following instructions:
 MOV Rxx,Ryy - copies the value from register Rxx to register Ryy;
 MOV d,Rxx - copies the numeric constant d (specified as a decimal) to register Rxx;
 ADD Rxx,Ryy - calculates (Rxx + Ryy) MOD 232 and stores the result in Rxx;
-DEC Rxx - decrements Rxx by one. Decrementing 0 causes an overflow and results in 232-1;
-INC Rxx - increments Rxx by one. Incrementing 232-1 causes an overflow and results in 0;
+DEC Rxx - decrements Rxx by one. Decrementing 0 causes an overflow and results in 2^32-1;
+INC Rxx - increments Rxx by one. Incrementing 2^32-1 causes an overflow and results in 0;
 INV Rxx - performs a bitwise inversion of register Rxx;
 JMP d - unconditionally jumps to instruction number d (1-based). d is guaranteed to be a valid instruction number;
 JZ d - jumps to instruction d (1-based) only if R00 contains 0;
@@ -90,41 +90,96 @@ def cpuEmulator(subroutine):
     reg = [0] * 43
     dispatcher = {'MOV': MOV,
                   'ADD': ADD,
-                  'DEC': DEC}
-    for instruction in subroutine:
-        ins = instruction.split(' ')
-        print(ins)
-        print(ins[1].split(',')[0])
-        dispatcher[ins[0]](ins[1].split(',')[0], ins[1].split(',')[1], reg)
+                  'DEC': DEC,
+                  'INC': INC,
+                  'INV': INV,
+                  'JMP': JMP,
+                  'JZ' : JZ,
+                  'NOP': NOP
+                  }
 
-def MOV(x, y, reg):
-    print(x, y)
+    i = 0
+    while i < len(subroutine):
+        #print(i)
+        instruction =  subroutine[i]
+        ins = instruction.split(' ')
+        #print(ins)
+        params = None
+        if len(ins) > 1:
+            #print(ins[1].split(',')[0])
+            params = ins[1].split(',')
+        i = dispatcher[ins[0]](params, reg, i)
+
+    return str(reg[42])
+
+def MOV(params, reg, i):
+    #print(params)
+    x = params[0]
+    y = params[1]
     if x[0] == 'R':
         reg[int(y[1:])] = reg[int(x[1:])]
     else:
         reg[int(y[1:])] = int(x)
-    print(reg)
+    #print(reg)
+    return i + 1
 
-def ADD(x, y, reg):
-    reg[int(x[1:])] = (reg[int(x[1:])] + reg[int(y[1:])]) % 232
+def ADD(params, reg, i):
+    x = params[0]
+    y = params[1]
+    reg[int(x[1:])] = (reg[int(x[1:])] + reg[int(y[1:])]) % 2**32
+    #print(reg)
+    return i + 1
 
-def DEC(x):
+def DEC(params, reg = None, i = 0):
+    x = params[0]
     if reg[int(x[1:])] == 0:
-        reg[int(x[1:])] = 232-1
+        reg[int(x[1:])] = 2**32-1
     else:
         reg[int(x[1:])] -= 1
+    #print(reg)
+    return i + 1
 
-def INC(x):
-    if reg[int(x[1:])] >= 232-1:
+def INC(params, reg, i):
+    x = params[0]
+    if reg[int(x[1:])] >= 2**32-1:
         reg[int(x[1:])] = 0
     else:
         reg[int(x[1:])] += 1
+    #print(reg)
+    return i + 1
 
+def INV(params, reg, i):
+    x = params[0]
+    reg[int(x[1:])] = ~reg[int(x[1:])] & 0xFFFFFFFF
+    #print(reg)
+    return i + 1
 
+def JMP(params, reg, i):
+    x = params[0]
+    #print(reg)
+    return int(x) - 1
 
+def JZ(params, reg, i):
+    x = params[0]
+    if reg[0] == 0:
+        return int(x) - 1
+    #print('skipped')
+    #print(reg)
+    return i + 1
+
+def NOP(params, reg, i):
+    return i + 1
 
 
 
 if __name__ == '__main__':
-    #cpuEmulator(['MOV 5,R00'])
-    print(~)
+    print('Answer : ' , cpuEmulator([
+  "MOV 5,R00",
+  "MOV 10,R01",
+  "JZ 7",
+  "ADD R02,R01",
+  "DEC R00",
+  "JMP 3",
+  "MOV R02,R42"
+]))
+    #print(~2)
