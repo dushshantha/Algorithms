@@ -5,6 +5,9 @@ realBoard = []
 myBoard = []
 length = 9
 number = 10
+winningCount = length * length - number
+clearCount = 0
+won = True
 mines = []
 
 #realBoard[2][5] = 1
@@ -17,10 +20,12 @@ def init(length):
     myBoard   = [['-' for x in range(length)] for y in range(length)]
     getRandomMines(number)
     printBoard(realBoard)
+    print('_________________________')
 
 def printBoard(board):
     for line in board:
         print(line, '\n')
+    print('__________________________')
 
 def isValid(x, y, board):
     return x >=0 and x < length and y >= 0 and y < length
@@ -114,30 +119,57 @@ def getRandomMines(number):
             y = random.randint(0, length - 1)
         realBoard[x][y] = '*'
         mines.append([x,y])
+
     
 def makeMove():
-
-    x = input("row ")
-    y = input("col ")
-    return x, y
+    s = input('Emter your move (row, col): ')
+    l = s.split(',')
+    return int(l[0]), int(l[1])
 
 def playMineSweep(row, col):
     global realBoard
     global myBoard
     global number
+    global clearCount
+    global winningCount
+    global won
+
+    if myBoard[row][col] == ' ':
+        return
 
     # GAME OVER
     if realBoard[row][col] == '*':
-        myBoard[row][col] = '*'
+        #First Move
+        if clearCount == 0:
+            realBoard[row][col] = ' '
+            x = random.randint(0, length - 1)
+            y = random.randint(0, length - 1)
+            while realBoard[x][y] == '*':
+                x = random.randint(0, length - 1)
+                y = random.randint(0, length - 1)
+            realBoard[x][y] = '*'
+            mines.append([x,y])
 
-        for i in range(number):
-            myBoard[mines[i][0]][mines[i][1]] = '*'
-        printBoard(myBoard)
-        print('YOU LOST \n')
+            for i in range(len(mines)):
+                if mines[i][0] == row and mines[i][1] == col:
+                    mines.pop(i)
+                    break
+            printBoard(realBoard) 
+            playMineSweep(row,col)
+
+        else:
+            myBoard[row][col] = '*'
+
+            for i in range(number):
+                myBoard[mines[i][0]][mines[i][1]] = '*'
+            #printBoard(myBoard)
+            won = False
+            
     else:
         count = countAdjesantMines(row, col)
         if count == 0:
             myBoard[row][col] = ' '
+            clearCount += 1
             # 1st
             if isValid(row-1, col, realBoard):
                 playMineSweep(row-1, col)
@@ -172,11 +204,19 @@ def playMineSweep(row, col):
 
         else:
             myBoard[row][col] = count
+            clearCount += 1
 
 
 
 if __name__ == '__main__':
-
+    init(length)
+    # Game Loop
+    while won and clearCount < winningCount:
+        row, col = makeMove()
+        playMineSweep(row, col)
+        printBoard(myBoard)
     
-    #makeMove()
-    init(9)
+    if won:
+        print("CONGRATZ !!! YOU WON")  
+    else:
+        print('YOU LOST')
