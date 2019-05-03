@@ -17,7 +17,7 @@ def init(length):
     global number
 
     realBoard = [[' ' for x in range(length)] for y in range(length)]
-    myBoard   = [['-' for x in range(length)] for y in range(length)]
+    myBoard   = [['0' for x in range(length)] for y in range(length)]
     getRandomMines(number)
     printBoard(realBoard)
     print('_________________________')
@@ -134,14 +134,14 @@ def playMineSweep(row, col):
     global winningCount
     global won
 
-    if myBoard[row][col] == ' ':
+    if myBoard[row][col] == '_':
         return
 
     # GAME OVER
     if realBoard[row][col] == '*':
         #First Move
         if clearCount == 0:
-            realBoard[row][col] = ' '
+            realBoard[row][col] = '_'
             x = random.randint(0, length - 1)
             y = random.randint(0, length - 1)
             while realBoard[x][y] == '*':
@@ -168,7 +168,7 @@ def playMineSweep(row, col):
     else:
         count = countAdjesantMines(row, col)
         if count == 0:
-            myBoard[row][col] = ' '
+            myBoard[row][col] = '_'
             clearCount += 1
             # 1st
             if isValid(row-1, col, realBoard):
@@ -203,7 +203,7 @@ def playMineSweep(row, col):
                 playMineSweep(row+1, col-1)
 
         else:
-            myBoard[row][col] = count
+            myBoard[row][col] = str(count)
             clearCount += 1
 
 
@@ -217,6 +217,7 @@ if __name__ == '__main__':
         printBoard(myBoard)
     
     if won:
+        print(winningCount, clearCount)
         print("CONGRATZ !!! YOU WON")  
     else:
         print('YOU LOST')
