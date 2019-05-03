@@ -1,11 +1,21 @@
+import random
+
 line = [''] * 9
 realBoard = []
 myBoard = []
 length = 9
+number = 10
+mines = []
+
 #realBoard[2][5] = 1
 def init(length):
-    realBoard = [['' for x in range(length)] for y in range(length)]
-    myBoard   = [['' for x in range(length)] for y in range(length)]
+    global realBoard
+    global myBoard
+    global number
+
+    realBoard = [[' ' for x in range(length)] for y in range(length)]
+    myBoard   = [['-' for x in range(length)] for y in range(length)]
+    getRandomMines(number)
     printBoard(realBoard)
 
 def printBoard(board):
@@ -13,7 +23,7 @@ def printBoard(board):
         print(line, '\n')
 
 def isValid(x, y, board):
-    return x >=0 and x < length and y >= 0 and y < lngth
+    return x >=0 and x < length and y >= 0 and y < length
 
 def isMine(x, y):
     if realBoard[x][y] == '*':
@@ -21,6 +31,7 @@ def isMine(x, y):
     return False
 
 def countAdjesantMines(row, col):
+    global realBoard
     count = 0
 
     '''
@@ -89,14 +100,83 @@ def countAdjesantMines(row, col):
     return count
 
 
+def getRandomMines(number):
+
+    global realBoard
+    global length
+    global mines
+
+    x = random.randint(0, length - 1)
+    y = random.randint(0, length - 1)
+    for i in range(number):
+        while realBoard[x][y] == '*':
+            x = random.randint(0, length - 1)
+            y = random.randint(0, length - 1)
+        realBoard[x][y] = '*'
+        mines.append([x,y])
+    
 def makeMove():
 
     x = input("row ")
     y = input("col ")
     return x, y
 
+def playMineSweep(row, col):
+    global realBoard
+    global myBoard
+    global number
+
+    # GAME OVER
+    if realBoard[row][col] == '*':
+        myBoard[row][col] = '*'
+
+        for i in range(number):
+            myBoard[mines[i][0]][mines[i][1]] = '*'
+        printBoard(myBoard)
+        print('YOU LOST \n')
+    else:
+        count = countAdjesantMines(row, col)
+        if count == 0:
+            myBoard[row][col] = ' '
+            # 1st
+            if isValid(row-1, col, realBoard):
+                playMineSweep(row-1, col)
+
+            # 2
+            if isValid(row+1, col, realBoard):
+                playMineSweep(row+1, col)
+
+            # 3
+            if isValid(row, col+1, realBoard):
+                playMineSweep(row, col+1)
+
+            # 4
+            if isValid(row, col-1, realBoard):
+                playMineSweep(row, col-1)
+
+            # 5
+            if isValid(row-1, col+1, realBoard):
+                playMineSweep(row-1, col+1)
+
+            # 6
+            if isValid(row-1, col-1, realBoard):
+                playMineSweep(row-1, col-1)
+
+            # 7
+            if isValid(row+1, col+1, realBoard):
+                playMineSweep(row+1, col+1)
+
+            # 8
+            if isValid(row+1, col-1, realBoard):
+                playMineSweep(row+1, col-1)
+
+        else:
+            myBoard[row][col] = count
+
 
 
 if __name__ == '__main__':
-    makeMove()
+
+    
+    #makeMove()
     init(9)
