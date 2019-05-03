@@ -5,7 +5,7 @@ realBoard = []
 myBoard = []
 length = 9
 number = 10
-winningCount = length * length - number
+winningCount = (length * length) - number
 clearCount = 0
 won = True
 mines = []
@@ -217,7 +217,7 @@ if __name__ == '__main__':
         printBoard(myBoard)
     
     if won:
-        print(winningCount, clearCount)
+        #print(winningCount, clearCount)
         print("CONGRATZ !!! YOU WON")  
     else:
         print('YOU LOST')
