@@ -217,7 +217,7 @@ if __name__ == '__main__':
         printBoard(myBoard)
     
     if won:
-        #print(winningCount, clearCount)
+        print(winningCount, clearCount)
         print("CONGRATZ !!! YOU WON")  
     else:
         print('YOU LOST')
