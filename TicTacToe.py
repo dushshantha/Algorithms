@@ -1,4 +1,5 @@
 import random
+import time
 
 class TTTBoard:
     def __init__(self):
@@ -15,7 +16,7 @@ class TTTBoard:
 
 
     def isValid(self, row, col):
-        return row >=0 and row < 3 and col >=0 and col < 3 and self.grid[row][col] == '-'
+        return row >=0 and row < 3 and col >=0 and col < 3 and self.grid[row][col] == '-' and not self.isBoardFull()
 
     def printBoard(self):
         for row in self.grid:
@@ -27,28 +28,48 @@ class TTTBoard:
 
 
     def makeMove(self, row, col, token):
-        if not self.addTocken(row, col, token):
-            raise Exception("Invalid Move")
-        return True
+        return self.addTocken(row, col, token)
 
 
     def moveByAI(self):
         for i in range(10):
             x = random.randint(0,2)
             y = random.randint(0,2)
-            try:
-                self.makeMove(i,i, "Y")
+
+            if self.makeMove(i,i, "O"):
                 self.printBoard()
-            except Exception as e:
+            else:
                 print("Invalid Move")
+
+    def ramdomMove(self):
+        x = random.randint(0, 2)
+        y = random.randint(0, 2)
+        while not self.makeMove(x,y, "O"):
+            x = random.randint(0, 2)
+            y = random.randint(0, 2)
+
+    def isPlayerWon(self):
+        return True
+
+    def getMove(self):
+        s = input("Your Move (X,Y) : ")
+        return int(s.split(',')[0]), int(s.split(',')[1])
+
 
 
 if __name__ == "__main__" :
     board = TTTBoard()
-    board.addTocken(0,1,'X')
     board.printBoard()
+    while not board.isBoardFull():
+        x,y = board.getMove()
+        while not board.isValid(x,y):
+            print("Invalid Move")
+            x, y = board.getMove()
 
-    #board.makeMove(0,1,'X')
-    board.moveByAI()
-
-
+        board.makeMove(x,y, "X")
+        board.printBoard()
+        time.sleep(3)
+        print("Computer's Move")
+        board.ramdomMove()
+        board.printBoard()
+        time.sleep(3)
