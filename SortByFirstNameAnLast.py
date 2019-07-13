@@ -20,3 +20,4 @@ def convert(name):
 print(sortByName(['alex one', 'test3 five', 'test1 two']))
 print(sortByName(['test1 two', 'alex five', 'alex two']))
 print(sortByName(['alex one', 'test1 five', 'test1 two']))
+print(sortByName(['alex one', 'test1 five', 'test1 two', 'test1 two']))
