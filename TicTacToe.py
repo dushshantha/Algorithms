@@ -60,15 +60,18 @@ class TTTBoard:
         return int(s.split(',')[0]), int(s.split(',')[1])
 
     def verticalTrue(self, token):
-        return self.grid[0][0] == self.grid[1][0] == self.grid[2][0] == token or self.grid[0][1] == self.grid[1][1] == self.grid[2][1] == token or \
+        return self.grid[0][0] == self.grid[1][0] == self.grid[2][0] == token or \
+               self.grid[0][1] == self.grid[1][1] == self.grid[2][1] == token or \
                self.grid[0][2] == self.grid[1][2] == self.grid[2][2] == token
 
     def horizontalTrue(self, token):
-        return self.grid[0][0] == self.grid[0][1] == self.grid[0][2] == token or self.grid[1][0] == self.grid[1][1] == self.grid[1][2] == token or \
+        return self.grid[0][0] == self.grid[0][1] == self.grid[0][2] == token or \
+               self.grid[1][0] == self.grid[1][1] == self.grid[1][2] == token or \
                self.grid[2][0] == self.grid[2][1] == self.grid[2][2] == token
 
     def diagonalTrue(self, token):
-        return self.grid[0][0] == self.grid[1][1] == self.grid[2][2] == token or self.grid[2][0] == self.grid[1][1] == self.grid[0][2] == token
+        return self.grid[0][0] == self.grid[1][1] == self.grid[2][2] == token or \
+               self.grid[2][0] == self.grid[1][1] == self.grid[0][2] == token
 
 
 if __name__ == "__main__" :
