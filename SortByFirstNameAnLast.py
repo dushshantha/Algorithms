@@ -12,6 +12,14 @@ def sortByName(names):
     names.sort(key=cmp_to_key(lambda x, y: 1 if convert(x.split(' ')[-1]) > convert(y.split(' ')[-1]) and  x > y else -1))
     return names
 
+
+
+'''
+Given a set of time intervals in any order, merge all overlapping intervals into one and output the 
+result which should have only mutually exclusive intervals. Let the intervals be represented as 
+pairs of integers for simplicity. For example, let the given set of intervals be {{1,3}, {2,4}, {5,7}, {6,8} }. 
+The intervals {1,3} and {2,4} overlap with each other, so they should be merged and become {1, 4}. Similarly {5, 7} and {6, 8} should be merged and become {5, 8}
+'''
 def sortArrays(a):
     print(a)
     a.sort(key=cmp_to_key(lambda x, y: 1 if x[0] >= y[0] else -1))
